@@ -1,0 +1,26 @@
+projectName: monitoring
+nameSpace: main
+app: prometheus
+alerting: alertmanager
+exporter: # {{ .Values.exporter.nodeexporter }}
+  nodeexporter: nodeexporter
+  blackbox: blackbox
+  cadvisor: cadvisor
+  kubestatemetrics: kubestatemetrics
+
+replicaSet: 1
+minReplicas: 1
+maxReplicas: 3
+averageUtilization: 70
+
+ContainerService:
+  type: ClusterIP # {{ .Values.ContainerService.type }}
+  port: 9090 # {{ .Values.ContainerService.port }}
+
+domainName: michaeltarriman.work # {{ .Values.domainName }}
+
+subDomainName:
+  prometheus: alert # {{ .Values.subDomainName.prometheus }}
+
+dockerImage: prom/prometheus # {{ .Values.dockerImage }}
+dockerVersion: latest # {{ .Values.dockerVersion }}

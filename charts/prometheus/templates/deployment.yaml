@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.projectName }}-{{ .Values.nameSpace }}-{{ .Values.app }} 
+  namespace: {{ .Values.projectName }}-{{ .Values.nameSpace }}
+  labels:
+    app: {{ .Values.projectName }}-{{ .Values.nameSpace }}-{{ .Values.app }} 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.projectName }}-{{ .Values.nameSpace }}-{{ .Values.app }} 
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.projectName }}-{{ .Values.nameSpace }}-{{ .Values.app }} 
+    spec:
+      initContainers:
+      - name: volume-permissions
+        image: busybox
+        command: ['sh', '-c', 'chown -R 65534:65534 /prometheus']
+        volumeMounts:
+        - name: {{ .Values.projectName }}-{{ .Values.nameSpace }}-{{ .Values.app }}-pvc
+          mountPath: /prometheus    
+      containers:
+      - name: prometheus
+        image: prom/prometheus
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/prometheus/prometheus.yml
+          subPath: prometheus.yml
+        - name: alert-rules-volume
+          mountPath: /etc/prometheus/alert.rules
+          subPath: alert.rules
+      volumes:
+      - name: config-volume
+        configMap:
+          name: {{ .Values.projectName }}-{{ .Values.nameSpace }}-{{ .Values.app }}-cm
+          items:
+          - key: prometheus.yml
+            path: prometheus.yml
+      - name: alert-rules-volume
+        configMap:
+          name: {{ .Values.projectName }}-{{ .Values.nameSpace }}-{{ .Values.app }}-cm
+          items:
+          - key: alert.rules
+            path: alert.rules
+      - name: {{ .Values.projectName }}-{{ .Values.nameSpace }}-{{ .Values.app }}-pvc
+        persistentVolumeClaim:
+          claimName: {{ .Values.projectName }}-{{ .Values.nameSpace }}-{{ .Values.app }}-pvc            
