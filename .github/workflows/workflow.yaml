@@ -93,9 +93,9 @@ jobs:
         run: |
           argocd app create $PROJECTNAME \
             --repo https://michaeltarriman.github.io/monitoring/ \
-            --path charts/  \
+            --path chart/  \
             --revision ${VERSION:1} \
-            --helm-chart prometheus \
+            --helm-chart monitoring \
             --dest-namespace $PROJECTNAME \
             --dest-server https://kubernetes.default.svc \
             --upsert \
