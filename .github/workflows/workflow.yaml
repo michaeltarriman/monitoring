@@ -95,7 +95,7 @@ jobs:
             --repo https://michaeltarriman.github.io/monitoring/ \
             --path chart/  \
             --revision ${VERSION:1} \
-            --helm-chart monitoring \
+            --helm-chart prometheus \
             --dest-namespace $PROJECTNAME \
             --dest-server https://kubernetes.default.svc \
             --upsert \
