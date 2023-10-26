@@ -28,7 +28,7 @@ jobs:
 
       - name: Lint Helm Chart
         run: |
-          helm lint ./charts/
+          helm lint ./charts/prometheus
 
   helmRelease:
     needs: [helmTest]
