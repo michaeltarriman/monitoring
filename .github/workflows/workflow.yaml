@@ -93,7 +93,7 @@ jobs:
         run: |
           argocd app create $PROJECTNAME \
             --repo https://michaeltarriman.github.io/monitoring/ \
-            --path chart/  \
+            --path charts/  \
             --revision ${VERSION:1} \
             --helm-chart prometheus \
             --dest-namespace $PROJECTNAME \
